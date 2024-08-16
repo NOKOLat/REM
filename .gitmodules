@@ -1,0 +1,6 @@
+[submodule "Core/Lib/SBUS"]
+	path = Core/Lib/SBUS
+	url = git@github.com:NOKOLat/SBUS.git
+[submodule "Core/Lib/LL_Extension"]
+	path = Core/Lib/LL_Extension
+	url = git@github.com:SatoshiRC/LL_Extension.git

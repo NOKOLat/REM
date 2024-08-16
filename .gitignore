@@ -1,0 +1,7 @@
+/Debug/
+/.*
+!.gitignore
+!.project
+/Drivers/
+*.launch
+/Release/
