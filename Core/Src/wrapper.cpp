@@ -10,31 +10,27 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include <string>
 #include <array>
-#include <cmath>
 
 #include "SBUS/sbus.h"
 #include "LL_Extension/TIM/LL_Extension_TIM_all.hpp"
 #include "LL_Extension/GPIO/LL_Extension_GPIO_all.hpp"
 
 #include "channel_definision.h"
+#include "user.h"
 
-//UART_HandleTypeDef *huartSbus = &huart1;
 nokolat::SBUS sbus;
 nokolat::SBUS_DATA sbusData;
 
 llex::USART_Interrupt husart2(USART2,sbusRxCompleteCallBack);
 llex::TIM_interrupt htimer17(TIM17);
-//llex::GPIO pb7(GPIOB,LL_GPIO_PIN_7);
-//llex::GPIO pc14(GPIOC, LL_GPIO_PIN_14);
-
-std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input);
+llex::GPIO pb7(GPIOB,LL_GPIO_PIN_7);
+llex::GPIO pc14(GPIOC, LL_GPIO_PIN_14);
 
 void init(){
 	LL_GPIO_SetOutputPin(GPIOB,LL_GPIO_PIN_7);
-//	pb7.set();
-//	pc14.set();
+	pb7.set();
+	pc14.set();
 	sbusData = sbus.getData();
 	husart2.receive((uint8_t*)sbus.getBufferIterator(), sbus.getDataLen());
 
@@ -49,18 +45,6 @@ void init(){
 	LL_TIM_WriteReg(TIM1,BDTR,(LL_TIM_ReadReg(TIM1,BDTR)|TIM_BDTR_MOE));
 	LL_TIM_WriteReg(TIM16,BDTR,(LL_TIM_ReadReg(TIM1,BDTR)|TIM_BDTR_MOE));
 
-//	CHANNEL1(1500);
-//	CHANNEL2(1500);
-//	CHANNEL3(1500);
-//	CHANNEL4(1500);
-//	CHANNEL5(1500);
-//	CHANNEL6(1500);
-//	CHANNEL7(1500);
-//	CHANNEL8(1500);
-//	CHANNEL9(1000);
-//	CHANNEL10(500);
-
-
 }
 
 void loop(){
@@ -70,38 +54,36 @@ void loop(){
 void sbusRxCompleteCallBack(){
 	LL_GPIO_TogglePin(GPIOC,LL_GPIO_PIN_14);
 	////		htim17.Instance->CNT = 0;
-			sbus.requireDecode();
-			sbusData = sbus.getData();
-//			if(sbusData.failsafe){
-//				//failsafe mode66
-//			}else if(sbusData.framelost){
-//				//frame lost
-//
-//			}else{
-//
-//			}
-			husart2.receive((uint8_t*)sbus.getBufferIterator(), sbus.getDataLen());
+	sbus.requireDecode();
+	sbusData = sbus.getData();
+	husart2.receive((uint8_t*)sbus.getBufferIterator(), sbus.getDataLen());
 
-			std::array<uint16_t, 10> mixedChannels = mixer(sbusData);
-			auto it = mixedChannels.begin();
+	if(sbusData.failsafe){
+		//failsafe mode66
+	}else if(sbusData.framelost){
+		//frame lost
 
-			if(sbusData[0]>1300){
-				LL_GPIO_SetOutputPin(GPIOB,LL_GPIO_PIN_7);
-			}else{
-				LL_GPIO_ResetOutputPin(GPIOB,LL_GPIO_PIN_7);
-			}
+	}
 
-			CHANNEL1(*it++);
-//			it++;
-			CHANNEL2(*it++);
-			CHANNEL3(*it++);
-			CHANNEL4(*it++);
-			CHANNEL5(*it++);
-			CHANNEL6(*it++);
-			CHANNEL7(*it++);
-			CHANNEL8(*it++);
-			CHANNEL9(*it++);
-			CHANNEL10(*it++);
+	std::array<uint16_t, 10> mixedChannels = mixer(sbusData);
+	auto it = mixedChannels.begin();
+
+	if(sbusData[0]>1300){
+		LL_GPIO_SetOutputPin(GPIOB,LL_GPIO_PIN_7);
+	}else{
+		LL_GPIO_ResetOutputPin(GPIOB,LL_GPIO_PIN_7);
+	}
+
+	CHANNEL1(*it++);
+	CHANNEL2(*it++);
+	CHANNEL3(*it++);
+	CHANNEL4(*it++);
+	CHANNEL5(*it++);
+	CHANNEL6(*it++);
+	CHANNEL7(*it++);
+	CHANNEL8(*it++);
+	CHANNEL9(*it++);
+	CHANNEL10(*it++);
 }
 
 //void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
@@ -135,27 +117,3 @@ void sbusRxCompleteCallBack(){
 ////		__HAL_TIM_CLEAR_FLAG(htim,TIM_IT_UPDATE);
 ////	}
 //}
-
-//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart){
-//	if(huart == &huart3){
-//		huart->gState = HAL_UART_STATE_READY;
-//	}
-//}
-
-std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
-	std::array<uint16_t,10> res;
-	auto it_res = res.begin();
-
-	*it_res++ = input.at(0);
-	*it_res++ = input.at(1);
-	*it_res++ = input.at(2);
-	*it_res++ = input.at(3);
-	*it_res++ = input.at(4);
-	*it_res++ = input.at(5);
-	*it_res++ = input.at(6);
-	*it_res++ = input.at(7);
-	*it_res++ = input.at(8);
-	*it_res++ = input.at(9);
-
-	return res;
-}
