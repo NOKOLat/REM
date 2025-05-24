@@ -13,8 +13,6 @@
 #include <array>
 
 #include "SBUS/sbus.h"
-#include "LL_Extension/TIM/LL_Extension_TIM_all.hpp"
-#include "LL_Extension/GPIO/LL_Extension_GPIO_all.hpp"
 
 #include "channel_definision.h"
 #include "user.h"
@@ -22,28 +20,22 @@
 nokolat::SBUS sbus;
 nokolat::SBUS_DATA sbusData;
 
-llex::USART_Interrupt husart2(USART2,sbusRxCompleteCallBack);
-llex::TIM_interrupt htimer17(TIM17);
-llex::GPIO pb7(GPIOB,LL_GPIO_PIN_7);
-llex::GPIO pc14(GPIOC, LL_GPIO_PIN_14);
+#define PB7 GPIOB, GPIO_PIN_7
+#define PC14 GPIOC, GPIO_PIN_14
 
 void init(){
-	LL_GPIO_SetOutputPin(GPIOB,LL_GPIO_PIN_7);
-	pb7.set();
-	pc14.set();
-	sbusData = sbus.getData();
-	husart2.receive((uint8_t*)sbus.getBufferIterator(), sbus.getDataLen());
+	HAL_GPIO_WritePin(PB7, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(PC14, GPIO_PIN_SET);
 
-	LL_TIM_EnableCounter(TIM3);
-	LL_TIM_CC_EnableChannel(TIM3, LL_TIM_CHANNEL_CH1|LL_TIM_CHANNEL_CH2|LL_TIM_CHANNEL_CH3|LL_TIM_CHANNEL_CH4);
-	LL_TIM_EnableCounter(TIM14);
-	LL_TIM_CC_EnableChannel(TIM14, LL_TIM_CHANNEL_CH1);
-	LL_TIM_EnableCounter(TIM16);
-	LL_TIM_CC_EnableChannel(TIM16, LL_TIM_CHANNEL_CH1);
-	LL_TIM_EnableCounter(TIM1);
-	LL_TIM_CC_EnableChannel(TIM1, LL_TIM_CHANNEL_CH1|LL_TIM_CHANNEL_CH2|LL_TIM_CHANNEL_CH3|LL_TIM_CHANNEL_CH4);
-	LL_TIM_WriteReg(TIM1,BDTR,(LL_TIM_ReadReg(TIM1,BDTR)|TIM_BDTR_MOE));
-	LL_TIM_WriteReg(TIM16,BDTR,(LL_TIM_ReadReg(TIM1,BDTR)|TIM_BDTR_MOE));
+	sbusData = sbus.getData();
+	HAL_UART_Receive_DMA(&huart2, (uint8_t*)sbus.getReceiveBufferPtr(), sbus.getDataLen());
+
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_ALL);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_ALL);
+	HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);
+
+	HAL_TIM_Base_Start_IT(&htim17);
 
 }
 
@@ -52,27 +44,24 @@ void loop(){
 }
 
 void sbusRxCompleteCallBack(){
-	LL_GPIO_TogglePin(GPIOC,LL_GPIO_PIN_14);
-	////		htim17.Instance->CNT = 0;
-	sbus.requireDecode();
+	HAL_GPIO_TogglePin(PC14);
+	sbus.parse();
 	sbusData = sbus.getData();
-	husart2.receive((uint8_t*)sbus.getBufferIterator(), sbus.getDataLen());
+	HAL_UART_Receive_DMA(&huart2, (uint8_t*)sbus.getReceiveBufferPtr(), sbus.getDataLen());
 
 	if(sbusData.failsafe){
-		//failsafe mode66
+		//failsafe
+		failsafe();
 	}else if(sbusData.framelost){
 		//frame lost
-
+		failsafe();
+	}else{
+		//Receive the data successfully.
+		__HAL_TIM_SET_COUNTER(&htim17,0);
 	}
 
 	std::array<uint16_t, 10> mixedChannels = mixer(sbusData);
 	auto it = mixedChannels.begin();
-
-	if(sbusData[0]>1300){
-		LL_GPIO_SetOutputPin(GPIOB,LL_GPIO_PIN_7);
-	}else{
-		LL_GPIO_ResetOutputPin(GPIOB,LL_GPIO_PIN_7);
-	}
 
 	CHANNEL1(*it++);
 	CHANNEL2(*it++);
@@ -84,6 +73,16 @@ void sbusRxCompleteCallBack(){
 	CHANNEL8(*it++);
 	CHANNEL9(*it++);
 	CHANNEL10(*it++);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	if(htim == &htim17){
+		failsafe();
+		HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
+		HAL_GPIO_TogglePin(PB7);
+		HAL_UART_DMAStop(&huart2);
+		HAL_UART_Receive_DMA(&huart2, (uint8_t*)sbus.getReceiveBufferPtr(), sbus.getDataLen());
+	}
 }
 
 //void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){

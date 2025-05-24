@@ -10,18 +10,16 @@
 
 #include "tim.h"
 
-//#define CHANNEL1(arg) LL_TIM_OC_SetCompareCH3(TIM3, arg)
-
-#define CHANNEL1(arg) LL_TIM_OC_SetCompareCH3(TIM3, arg)
-#define CHANNEL2(arg) LL_TIM_OC_SetCompareCH1(TIM16, arg)
-#define CHANNEL3(arg) LL_TIM_OC_SetCompareCH2(TIM1, arg)
-#define CHANNEL4(arg) LL_TIM_OC_SetCompareCH3(TIM1, arg)
-#define CHANNEL5(arg) LL_TIM_OC_SetCompareCH4(TIM1, arg)
-#define CHANNEL6(arg) LL_TIM_OC_SetCompareCH1(TIM14, arg)
-#define CHANNEL7(arg) LL_TIM_OC_SetCompareCH1(TIM1, arg)
-#define CHANNEL8(arg) LL_TIM_OC_SetCompareCH1(TIM3, arg)
-#define CHANNEL9(arg) LL_TIM_OC_SetCompareCH2(TIM3, arg)
-#define CHANNEL10(arg) LL_TIM_OC_SetCompareCH4(TIM3, arg)
+#define CHANNEL1(arg) __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, arg)
+#define CHANNEL2(arg) __HAL_TIM_SET_COMPARE(&htim16, TIM_CHANNEL_1, arg)
+#define CHANNEL3(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arg)
+#define CHANNEL4(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arg)
+#define CHANNEL5(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arg)
+#define CHANNEL6(arg) __HAL_TIM_SET_COMPARE(&htim14, TIM_CHANNEL_1, arg)
+#define CHANNEL7(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arg)
+#define CHANNEL8(arg) __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, arg)
+#define CHANNEL9(arg) __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, arg)
+#define CHANNEL10(arg) __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_4, arg)
 
 
 
