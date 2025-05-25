@@ -1,6 +1,6 @@
 [submodule "Core/Lib/SBUS"]
 	path = Core/Lib/SBUS
 	url = git@github.com:NOKOLat/SBUS.git
-[submodule "./Core/Lib/RingBuffer"]
-	path = ./Core/Lib/ringBuffer
+[submodule "Core/Lib/ringBuffer"]
+	path = Core/Lib/ringBuffer
 	url = git@github.com:NOKOLat/Ring-Buffer.git
