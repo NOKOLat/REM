@@ -43,6 +43,7 @@ void loop(){
 
 }
 
+
 void sbusRxCompleteCallBack(){
 	HAL_GPIO_TogglePin(PC14);
 	sbus.parse();
@@ -80,29 +81,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		failsafe();
 		HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
 		HAL_GPIO_TogglePin(PB7);
-		HAL_UART_DMAStop(&huart2);
+		HAL_UART_AbortReceive(&huart2);
 		HAL_UART_Receive_DMA(&huart2, (uint8_t*)sbus.getReceiveBufferPtr(), sbus.getDataLen());
 	}
 }
 
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
-////	if(huart == huartSbus){
-////		htim17.Instance->CNT = 0;
-////		sbus.requireDecode();
-////		sbusData = sbus.getData();
-////		if(sbusData.failsafe){
-////			//failsafe mode
-////		}else if(sbusData.framelost){
-////			//frame lost
-////
-////		}else{
-////
-////		}
-////		HAL_UART_Receive_IT(huartSbus,sbus.getReceiveBufferPtr(),sbus.getDataLen());
-////
-//////		esc.setSpeed(hmulticopter->controller(multicopterInput));
-////	}
-//}
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	if(huart == &huart2){
+		sbusRxCompleteCallBack();
+	}
+}
 
 
 //void tim17Callback(){
