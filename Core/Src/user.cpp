@@ -6,6 +6,7 @@
  */
 
 #include "user.h"
+#include "channel_definision.h"
 
 std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	std::array<uint16_t,10> res;
@@ -23,4 +24,8 @@ std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	*it_res++ = input.at(9);
 
 	return res;
+}
+
+void failsafe(){
+	CHANNEL3(0);
 }
