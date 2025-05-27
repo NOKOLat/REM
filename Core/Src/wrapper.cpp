@@ -30,12 +30,20 @@ void init(){
 	sbusData = sbus.getData();
 	HAL_UART_Receive_DMA(&huart2, (uint8_t*)sbus.getReceiveBufferPtr(), sbus.getDataLen());
 
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_ALL);
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_ALL);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_PWM_Start(&htim14, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim16, TIM_CHANNEL_1);
 
 	HAL_TIM_Base_Start_IT(&htim17);
+	HAL_GPIO_WritePin(PB7, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
 
 }
 
