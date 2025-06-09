@@ -33,6 +33,7 @@ inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 
 	return res;
 }
+
 void failsafe();
 
 #endif /* INC_USER_H_ */

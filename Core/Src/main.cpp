@@ -101,7 +101,6 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 init();
-//  LL_GPIO_SetOutputPin(GPIOB,LL_GPIO_PIN_7);
   /* USER CODE END 2 */
 
   /* Infinite loop */
