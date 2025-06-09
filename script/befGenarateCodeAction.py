@@ -1,5 +1,6 @@
-#!/usr/bin/python3
 import os
+
+print("befAction")
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 if os.path.exists("./../Core/Src/main.cpp"):
