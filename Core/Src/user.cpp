@@ -8,8 +8,7 @@
 #include "user.h"
 #include "channel_definision.h"
 
-uint32_t adcValue=0;
-
 void failsafe(){
+	HAL_GPIO_WritePin(PC14, GPIO_PIN_SET);
 	CHANNEL3(0);
 }

@@ -20,9 +20,6 @@
 #include "channel_definision.h"
 #include "user.h"
 
-#define PB7 GPIOB, GPIO_PIN_7
-#define PC14 GPIOC, GPIO_PIN_14
-
 extern nokolat::SBUS sbus;
 extern nokolat::SBUS_DATA sbusData;
 
@@ -57,19 +54,20 @@ inline void loop(void){
 }
 
 inline void sbusRxCompleteCallBack(){
-	HAL_GPIO_TogglePin(PC14);
+	HAL_GPIO_TogglePin(PB7);
 	sbus.parse();
-//	sbusData = sbus.getData();
+	sbusData = sbus.getData();
 
 	if(sbusData.failsafe){
 		//failsafe
 		failsafe();
 	}else if(sbusData.framelost){
 		//frame lost
-//		failsafe();
+		failsafe();
 	}else{
 		//Receive the data successfully.
 		__HAL_TIM_SET_COUNTER(&htim17,0);
+		HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
 	}
 
 	std::array<uint16_t, 10> mixedChannels = mixer(sbusData);

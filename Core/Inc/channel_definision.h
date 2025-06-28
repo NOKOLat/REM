@@ -10,11 +10,11 @@
 
 #include "tim.h"
 
-#define CHANNEL1(arg) __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, arg)
-#define CHANNEL2(arg) __HAL_TIM_SET_COMPARE(&htim16, TIM_CHANNEL_1, arg)
-#define CHANNEL3(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arg)
-#define CHANNEL4(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arg)
-#define CHANNEL5(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arg)
+#define CHANNEL1(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, arg)
+#define CHANNEL2(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, arg)
+#define CHANNEL3(arg) __HAL_TIM_SET_COMPARE(&htim16, TIM_CHANNEL_1, arg)
+#define CHANNEL4(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, arg)
+#define CHANNEL5(arg) __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_3, arg)
 #define CHANNEL6(arg) __HAL_TIM_SET_COMPARE(&htim14, TIM_CHANNEL_1, arg)
 #define CHANNEL7(arg) __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, arg)
 #define CHANNEL8(arg) __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, arg)

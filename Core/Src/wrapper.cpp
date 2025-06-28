@@ -10,11 +10,11 @@
 
 nokolat::SBUS sbus;
 nokolat::SBUS_DATA sbusData;
+uint32_t adcValue=0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if(htim == &htim17){
 		failsafe();
-		HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
 		HAL_GPIO_TogglePin(PB7);
 		HAL_UART_AbortReceive(&huart2);
 		HAL_UART_Receive_DMA(&huart2, (uint8_t*)sbus.getReceiveBufferPtr(), sbus.getDataLen());
