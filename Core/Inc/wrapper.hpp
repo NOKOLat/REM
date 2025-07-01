@@ -29,7 +29,7 @@ inline void init(void){
 	HAL_GPIO_WritePin(PB7, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(PC14, GPIO_PIN_SET);
 
-	sbusData = sbus.getData();
+//	sbusData = sbus.getData();
 
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
