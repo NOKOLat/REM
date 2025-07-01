@@ -13,6 +13,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "adc.h"
+#include "dma.h"
 #include <array>
 
 #include "SBUS/sbus.h"
@@ -21,15 +22,12 @@
 #include "user.h"
 
 extern nokolat::SBUS sbus;
-extern nokolat::SBUS_DATA sbusData;
 
-extern uint32_t adcValue;
+extern uint16_t adcValue;
 
 inline void init(void){
 	HAL_GPIO_WritePin(PB7, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(PC14, GPIO_PIN_SET);
-
-//	sbusData = sbus.getData();
 
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -46,7 +44,8 @@ inline void init(void){
 	HAL_GPIO_WritePin(PB7, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
 
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adcValue, 1);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&adcValue, 1);
+	hadc1.DMA_Handle->Instance->CCR &= ~(DMA_IT_TC | DMA_IT_HT);
 }
 
 inline void loop(void){
@@ -55,8 +54,8 @@ inline void loop(void){
 
 inline void sbusRxCompleteCallBack(){
 	HAL_GPIO_TogglePin(PB7);
+	nokolat::SBUS_DATA sbusData = sbus.getData();
 	sbus.parse();
-	sbusData = sbus.getData();
 
 	if(sbusData.failsafe){
 		//failsafe
