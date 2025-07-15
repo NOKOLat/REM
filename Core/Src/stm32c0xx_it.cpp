@@ -178,7 +178,19 @@ void DMA1_Channel2_3_IRQHandler(void)
 void TIM17_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM17_IRQn 0 */
-	
+	TIM_HandleTypeDef *htim = &htim17;
+	uint32_t itsource = htim->Instance->DIER;
+	uint32_t itflag   = htim->Instance->SR;
+
+	/* TIM Update event */
+	if ((itflag & (TIM_FLAG_UPDATE)) == (TIM_FLAG_UPDATE)){
+		if ((itsource & (TIM_IT_UPDATE)) == (TIM_IT_UPDATE)){
+			__HAL_TIM_CLEAR_FLAG(htim, TIM_FLAG_UPDATE);
+			HAL_TIM_PeriodElapsedCallback(htim);
+		}
+	}
+
+	return;
   /* USER CODE END TIM17_IRQn 0 */
   HAL_TIM_IRQHandler(&htim17);
   /* USER CODE BEGIN TIM17_IRQn 1 */
