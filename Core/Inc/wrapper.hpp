@@ -101,8 +101,6 @@ inline void sbusRxCompleteCallBack(){
 	CHANNEL8(sbus.convertSbus2PwmWidthUS(*it++));
 	CHANNEL9(sbus.convertSbus2PwmWidthUS(*it++));
 	CHANNEL10(sbus.convertSbus2PwmWidthUS(*it++));
-
-	HAL_UART_Transmit(&huart1, (uint8_t *)&sbusData[5], 2, 100);
 }
 
 
