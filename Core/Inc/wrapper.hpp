@@ -51,6 +51,8 @@ inline void init(void){
 	TIM_CCxChannelCmd(htim3.Instance, TIM_CHANNEL_4, TIM_CCx_ENABLE);
 	TIM_CCxChannelCmd(htim14.Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
 	TIM_CCxChannelCmd(htim16.Instance, TIM_CHANNEL_1, TIM_CCx_ENABLE);
+	__HAL_TIM_MOE_ENABLE(&htim1);
+	__HAL_TIM_MOE_ENABLE(&htim16);
 	__HAL_TIM_ENABLE(&htim1);
 	__HAL_TIM_ENABLE(&htim3);
 	__HAL_TIM_ENABLE(&htim14);
