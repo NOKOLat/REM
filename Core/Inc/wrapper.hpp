@@ -16,7 +16,7 @@
 #include "dma.h"
 #include <array>
 
-#include "SBUS/sbus.h"
+#include "sbus.h"
 
 #include "channel_definision.h"
 #include "user.h"
