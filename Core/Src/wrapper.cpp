@@ -6,7 +6,7 @@
  */
 #include "wrapper.hpp"
 
-#include "SBUS/sbus.h"
+#include "sbus.h"
 
 nokolat::SBUS sbus;
 uint16_t adcValue=0;

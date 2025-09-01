@@ -11,4 +11,6 @@
 void failsafe(){
 	HAL_GPIO_WritePin(PC14, GPIO_PIN_SET);
 	CHANNEL3(0);
+	CHANNEL9(0);
+	CHANNEL10(0);
 }
