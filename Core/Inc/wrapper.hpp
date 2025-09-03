@@ -88,21 +88,21 @@ inline void sbusRxCompleteCallBack(){
 		//Receive the data successfully.
 		__HAL_TIM_SET_COUNTER(&htim17,0);
 		HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
+
+		std::array<uint16_t, 10> mixedChannels = mixer(sbusData);
+		auto it = mixedChannels.begin();
+
+		CHANNEL1(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL2(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL3(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL4(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL5(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL6(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL7(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL8(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL9(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL10(sbus.convertSbus2PwmWidthUS(*it++));
 	}
-
-	std::array<uint16_t, 10> mixedChannels = mixer(sbusData);
-	auto it = mixedChannels.begin();
-
-	CHANNEL1(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL2(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL3(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL4(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL5(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL6(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL7(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL8(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL9(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL10(sbus.convertSbus2PwmWidthUS(*it++));
 }
 
 
