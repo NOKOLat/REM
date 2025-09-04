@@ -8,7 +8,7 @@
 #ifndef INC_USER_H_
 #define INC_USER_H_
 
-#define MANUAL_ONLY
+//#define MANUAL_ONLY
 
 #include "gpio.h"
 #include <array>
@@ -23,6 +23,8 @@ extern uint16_t adcValue;
 inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	const uint8_t ADC_THRESHOLD = 100;
 	const uint16_t AUTO_MANULA_THRESHOLD = 1500;
+	static bool isIrDetected = false;
+	static bool isAutoDropParmitted = false;
 	static std::array<uint16_t,10> res;
 	auto it_res = res.begin();
 
@@ -32,12 +34,37 @@ inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	*it_res++ = input.at(3);
 	*it_res++ = input.at(4);
 	*it_res++ = input.at(5);
-
-#ifdef MANUAL_ONLY
 	*it_res++ = input.at(6);
+#ifdef MANUAL_ONLY
+
 #endif
 
 #ifndef MANUAL_ONLY
+    if(adcValue < ADC_THRESHOLD){
+        // 赤外線検知した場合
+        // 赤外線検知フラグたてる
+        isIrDetected = true;
+
+        if(isAutoDropParmitted){
+        // 自動投下許可ある場合は7chの値を渡す
+            *it_res++ = input.at(7);
+        }
+    }else{
+    // 赤外線未検知なのでフラグ下げる
+        isIrDetected = false;
+    }
+    if(input.at(6) > AUTO_MANULA_THRESHOLD){
+    // 自動投下許可ある場合
+        if(!isIrDetected){
+        // 赤外線検知してないなら自動投下許可フラグ立てる
+            isAutoDropParmitted = true;
+        }
+    }else{
+        // 自動投下許可してないならフラグ下げる
+        isAutoDropParmitted = false;
+        *it_res++ = input.at(7);
+    }
+/*
 	// 6chは自動/手動の切り替え
 	// 7chは投下装置
 	if(adcValue < ADC_THRESHOLD && input.at(5) > AUTO_MANULA_THRESHOLD){
@@ -53,9 +80,8 @@ inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 		// 前の値を保持
 		it_res++;
 	}
+*/
 #endif
-
-	*it_res++ = input.at(7);
 	*it_res++ = input.at(8);
 	*it_res++ = input.at(9);
 
