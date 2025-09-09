@@ -101,8 +101,8 @@ inline void sbusRxCompleteCallBack(){
 	CHANNEL6(sbus.convertSbus2PwmWidthUS(*it++));
 	CHANNEL7(sbus.convertSbus2PwmWidthUS(*it++));
 	CHANNEL8(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL9(sbus.convertSbus2PwmWidthUS(*it++));
-	CHANNEL10(sbus.convertSbus2PwmWidthUS(*it++));
+	CHANNEL9(((*it++-sbus.getSbusMin())*2500)/(sbus.getSbusMax() - sbus.getSbusMin()));
+	CHANNEL10(((*it++-sbus.getSbusMin())*2500)/(sbus.getSbusMax() - sbus.getSbusMin()));
 }
 
 
