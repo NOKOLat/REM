@@ -16,11 +16,16 @@
 #define PB7 GPIOB, GPIO_PIN_7
 #define PC14 GPIOC, GPIO_PIN_14
 
+#define __IS_IR_DETECTED adcValue < ADC_THRESHOLD
+
+#define __SET_MANUAL_HOLDING_TIME(arg) arg = HAL_GetTick() + 5*1000;
+
 extern uint16_t adcValue;
 
 inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	const uint8_t ADC_THRESHOLD = 100;
 	const uint16_t AUTO_MANULA_THRESHOLD = 1500;
+	static uint32_t holdManualModeUntill = 0;
 	static std::array<uint16_t,10> res;
 	auto it_res = res.begin();
 
@@ -30,13 +35,26 @@ inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	*it_res++ = input.at(3);
 	*it_res++ = input.at(4);
 	*it_res++ = input.at(5);
-	if(adcValue < ADC_THRESHOLD && input.at(5) > AUTO_MANULA_THRESHOLD){
+
+	if(__IS_IR_DETECTED && input.at(5) > AUTO_MANULA_THRESHOLD){
+		//auto release
 		*it_res++ = input.at(6);
 	}else if(input.at(5) <= AUTO_MANULA_THRESHOLD){
-		*it_res++ = input.at(6);
+		//controller is set to manual mode
+		if(__IS_IR_DETECTED){
+			__SET_MANUAL_HOLDING_TIME(holdManualModeUntill);
+		}else if(holdManualModeUntill > HAL_GetTick()){
+			//Hold on manual mode after IR is detected
+			it_res++;
+		}else{
+			//manual mode
+			*it_res++ = input.at(6);
+		}
 	}else{
+		//Hold on auto mode
 		it_res++;
 	}
+
 	*it_res++ = input.at(7);
 	*it_res++ = input.at(8);
 	*it_res++ = input.at(9);
