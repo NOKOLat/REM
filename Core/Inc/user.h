@@ -43,6 +43,7 @@ inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 		//controller is set to manual mode
 		if(__IS_IR_DETECTED){
 			__SET_MANUAL_HOLDING_TIME(holdManualModeUntill);
+			it_res++;
 		}else if(holdManualModeUntill > HAL_GetTick()){
 			//Hold on manual mode after IR is detected
 			it_res++;
