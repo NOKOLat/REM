@@ -11,6 +11,8 @@
 nokolat::SBUS sbus;
 uint16_t adcValue=0;
 
+const uint16_t maxPulseWidthUs = 2500;
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if(htim == &htim17){
 		failsafe();

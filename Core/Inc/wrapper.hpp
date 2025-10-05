@@ -89,19 +89,20 @@ inline void sbusRxCompleteCallBack(){
 		__HAL_TIM_SET_COUNTER(&htim17,0);
 		HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
 
-		std::array<uint16_t, 10> mixedChannels = mixer(sbusData);
-		auto it = mixedChannels.begin();
+		auto tmp = mixer(sbusData);
+		std::array<uint16_t, 10> pulseWidth = convertToPwmWidth(tmp);
+		auto it = pulseWidth.begin();
 
-		CHANNEL1(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL2(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL3(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL4(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL5(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL6(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL7(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL8(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL9(sbus.convertSbus2PwmWidthUS(*it++));
-		CHANNEL10(sbus.convertSbus2PwmWidthUS(*it++));
+		CHANNEL1(*it++);
+		CHANNEL2(*it++);
+		CHANNEL3(*it++);
+		CHANNEL4(*it++);
+		CHANNEL5(*it++);
+		CHANNEL6(*it++);
+		CHANNEL7(*it++);
+		CHANNEL8(*it++);
+		CHANNEL9(*it++);
+		CHANNEL10(*it++);
 	}
 }
 
