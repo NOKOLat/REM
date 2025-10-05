@@ -20,6 +20,7 @@
 
 extern uint16_t adcValue;
 extern const uint16_t maxPulseWidthUs;
+extern nokolat::SBUS sbus;
 
 inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	std::array<uint16_t,10> res;
@@ -39,7 +40,7 @@ inline std::array<uint16_t,10> mixer(nokolat::SBUS_DATA &input){
 	return res;
 }
 
-inline std::array<uint16_t,10> convertToPwmWidth(str::array<uint16_t, 10> sbusValue){
+inline std::array<uint16_t,10> convertToPwmWidth(std::array<uint16_t, 10> &sbusValue){
 	std::array<uint16_t,10> res;
 	auto it_res = res.begin();
 	auto it_arg = sbusValue.begin();

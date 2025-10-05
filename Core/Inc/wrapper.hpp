@@ -89,7 +89,9 @@ inline void sbusRxCompleteCallBack(){
 		__HAL_TIM_SET_COUNTER(&htim17,0);
 		HAL_GPIO_WritePin(PC14, GPIO_PIN_RESET);
 
-		std::array<uint16_t, 10> pulseWidth = convertToPwmWidth(mixer(sbusData));
+//		std::array<uint16_t, 10> pulseWidth = convertToPwmWidth(mixer(sbusData));
+		auto tmp = mixer(sbusData);
+		std::array<uint16_t, 10> pulseWidth = convertToPwmWidth(tmp);
 		auto it = pulseWidth.begin();
 
 		CHANNEL1(*it++);
