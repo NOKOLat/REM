@@ -85,8 +85,11 @@ s.busのフレームを受信している間はLED2が高速で点滅する．
 
 # ファームウェアのカスタマイズ
 ## PWMデューティー比レンジの設定
-Futaba製RCサーボ向けのPWM出力とデューティー比0%から100%の2種類を用意している．
+Futaba製RCサーボ向けのPWM出力とLED向けにデューティー比0%から100%の2種類を用意している．
 設定は *user.h* にある`convertToPulseWidth()`で行う．
+使用方法は実装を見てほしい．
+RCサーボ向けのPWMとする場合は`CONVERT_TO_RC_PWM_WIDTH(sbusValue)`を使用する．
+LED向けにデューティー比を0%から100%とする場合は`CONVERT_TO_LED_PWM_WIDTH(sbusValue)`を使用する．
 
 ## カスタムミキシング
 *user.h* にある`mixer()`で行う．
